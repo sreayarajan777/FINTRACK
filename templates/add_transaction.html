@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Add Transaction{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Add Transaction</h2>
+
+  <!-- Flash messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Add Transaction Form -->
+  <div class="card shadow p-4 mb-5">
+    <form method="POST" action="{{ url_for('add_transaction') }}">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label class="form-label">Type</label>
+          <select id="typeSelect" name="type" class="form-select" required>
+            <option value="">Select Type</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Date</label>
+          <input type="date" name="date" value="{{ current_date }}" class="form-control" required>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Category</label>
+          <input type="text" name="category" class="form-control" placeholder="e.g. Salary, Groceries" required>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label class="form-label">Amount</label>
+          <input type="number" name="amount" step="0.01" class="form-control" required>
+        </div>
+        <div class="col-md-4" id="paymentField">
+          <label class="form-label">Payment Method</label>
+          <select id="paymentMethod" name="payment_method" class="form-select">
+            <option value="">Select Method</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+            <option value="UPI">UPI</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Notes</label>
+          <input type="text" name="notes" class="form-control" placeholder="Optional notes">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary px-4">Add Transaction</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JavaScript to hide Payment Method when Type = Income -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const typeSelect = document.getElementById('typeSelect');
+  const paymentField = document.getElementById('paymentField');
+  const paymentMethod = document.getElementById('paymentMethod');
+
+  function togglePaymentField() {
+    if (typeSelect.value === 'Income') {
+      paymentField.style.display = 'none';
+      paymentMethod.removeAttribute('required');
+      paymentMethod.value = '';
+    } else {
+      paymentField.style.display = 'block';
+      paymentMethod.setAttribute('required', 'true');
+    }
+  }
+
+  // Run once on page load and on change
+  togglePaymentField();
+  typeSelect.addEventListener('change', togglePaymentField);
+});
+</script>
+{% endblock %}

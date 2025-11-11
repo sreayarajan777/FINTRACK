@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Welcome, {{ user.name or user.email }}!</h2>
+
+<div class="mb-4 d-flex align-items-center gap-2">
+    <a href="{{ url_for('add_transaction') }}" class="btn btn-success mb-2">
+        <i class="bi bi-plus-circle"></i> Add Transaction
+    </a>
+    <a href="{{ url_for('view_transactions') }}" class="btn btn-info mb-2">View All Transactions</a>
+
+    <!-- Date Filter -->
+    <form method="GET" action="{{ url_for('dashboard') }}" class="row g-2 ms-auto">
+        <div class="col-auto">
+            <input type="date" name="filter_date" class="form-control" value="{{ filter_date or '' }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+</div>
+
+<!-- Daily Summary -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Income ({{ filter_date or "Today" }})</h5>
+                <p class="card-text text-success fs-4">₹{{ '%.2f' % today_income }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Expense ({{ filter_date or "Today" }})</h5>
+                <p class="card-text text-danger fs-4">₹{{ '%.2f' % today_expense }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Balance</h5>
+                <p class="card-text fs-4" style="color: {{ 'green' if today_balance >= 0 else 'red' }}">
+                    ₹{{ '%.2f' % today_balance }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<!-- Payment Method Summary -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Total Cash</h5>
+        <p class="fs-4">₹{{ '%.2f' % total_cash }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Total UPI</h5>
+        <p class="fs-4">₹{{ '%.2f' % total_upi }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Total Transactions</h5>
+        <p class="fs-4">₹{{ '%.2f' % total_amount }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly Summary -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">Monthly Summary ({{ current_year }})</h5>
+        {% if monthly_income or monthly_expense %}
+        <canvas id="monthlyChart" height="100"></canvas>
+        {% else %}
+        <p class="text-muted">No monthly data available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Recent Transactions -->
+<!-- Recent Transactions -->
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title">Recent Transactions</h5>
+    {% if recent_transactions %}
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>Date</th>
+             <th>Type</th> 
+
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Payment Method</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in recent_transactions %}
+          <tr>
+            <td>{{ t.date.strftime('%Y-%m-%d') }}</td>
+            <td>
+              {% if t.type.lower() == 'income' %}
+                <span class="text-success fw-bold">{{ t.type.title() }}</span>
+              {% else %}
+                <span class="text-danger fw-bold">{{ t.type.title() }}</span>
+              {% endif %}
+            </td>
+            <td>{{ t.category }}</td>
+            <td>₹{{ '%.2f'|format(t.amount) }}</td>
+            <td>{{ t.payment_method or '-' }}</td>
+            <td>{{ t.note or '-' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <p class="text-muted">No recent transactions found.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Chart.js for Monthly Summary -->
+{% if monthly_income or monthly_expense %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('monthlyChart').getContext('2d');
+const monthlyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+        datasets: [
+            {
+                label: 'Income',
+                data: [{% for i in range(1,13) %}{{ monthly_income.get(i,0) or 0 }}{% if not loop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            },
+            {
+                label: 'Expense',
+                data: [{% for i in range(1,13) %}{{ monthly_expense.get(i,0) or 0 }}{% if not loop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }
+        ]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+});
+</script>
+{% endif %}
+
+{% endblock %}

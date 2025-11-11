@@ -1,0 +1,166 @@
+/* === Global Styles === */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f7faff;
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Navbar === */
+.navbar {
+    background: linear-gradient(90deg, #007bff, #00b4d8);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+.navbar .btn {
+    border-radius: 30px;
+    font-weight: 500;
+}
+
+/* === Buttons === */
+.btn-primary-custom {
+    background: linear-gradient(90deg, #007bff, #00b4d8);
+    border: none;
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+.btn-primary-custom:hover {
+    background: linear-gradient(90deg, #0056d2, #0097c7);
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* === Hero Section === */
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #e9f5ff, #f1f9ff);
+    border-radius: 20px;
+    margin-bottom: 60px;
+}
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #007bff;
+}
+.hero p {
+    color: #6c757d;
+    font-size: 1.2rem;
+    margin-top: 15px;
+}
+
+/* === Cards === */
+.card {
+    border: none;
+    border-radius: 15px;
+    padding: 2rem;
+    background: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+.card-title {
+    font-weight: 600;
+    color: #007bff;
+}
+.card-text {
+    color: #6c757d;
+}
+
+/* === Forms === */
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+.form-control {
+    border-radius: 10px;
+    padding: 10px 14px;
+    border: 1px solid #dcdcdc;
+    transition: all 0.3s ease;
+}
+.form-control:focus {
+    border-color: #00b4d8;
+    box-shadow: 0 0 10px rgba(0, 180, 216, 0.2);
+}
+
+/* === Auth Pages (Login/Register) === */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+.auth-page .card {
+    border-radius: 15px;
+    padding: 2rem;
+    background: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.auth-page .card h3 {
+    font-weight: 700;
+    color: #007bff;
+}
+
+/* === Links === */
+a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+a:hover {
+    color: #0056d2;
+}
+
+/* === Alerts === */
+.alert {
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* === Footer === */
+footer {
+    background: #f1f9ff;
+    border-top: 1px solid #e1e1e1;
+    margin-top: 60px;
+    padding: 30px 0;
+}
+footer p {
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+footer a {
+    color: #007bff;
+    transition: color 0.3s ease;
+}
+footer a:hover {
+    color: #0056d2;
+}
+footer i {
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+footer i:hover {
+    color: #00b4d8;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .card {
+        padding: 1.5rem;
+    }
+}

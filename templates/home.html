@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Home - Personal Finance Tracker{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero text-center mt-5">
+  <h1>Welcome to Your Personal Finance Tracker</h1>
+  <p>Manage your income and expenses easily. Track spending, plan budgets, and achieve your financial goals!</p>
+
+  {% if not user %}
+    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg mt-3">Get Started</a>
+  {% endif %}
+</div>
+
+<!-- Add Transaction Section for Logged-in Users -->
+{% if user %}
+<div class="container text-center mt-5">
+    <div class="card mx-auto p-4" style="max-width: 500px;">
+        {% if transactions_count > 0 %}
+            <h3 class="mb-3">Welcome back, {{ user.name }}!</h3>
+            <p>Here is a quick summary of your finances.</p>
+            <a href="{{ url_for('add_transaction') }}" class="btn btn-primary mt-3">Add New Transaction</a>
+        {% else %}
+            <h3 class="mb-3">Start Tracking Your Finances!</h3>
+            <p>Add your first transaction to see your income and expenses.</p>
+            <a href="{{ url_for('add_transaction') }}" class="btn btn-primary btn-lg mt-3">Add Your First Transaction</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Finance Sections (Always Visible) -->
+<section class="container my-5">
+  <h2 class="text-center fw-bold mb-4 text-primary">Manage Your Finances</h2>
+  <div class="row text-center g-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm p-4 h-100">
+        <i class="bi bi-cash-stack text-success display-5 mb-3"></i>
+        <h5 class="fw-bold">Income Management</h5>
+        <p class="text-muted">Add and view all your income sources to keep track of your earnings.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm p-4 h-100">
+        <i class="bi bi-wallet2 text-danger display-5 mb-3"></i>
+        <h5 class="fw-bold">Expense Management</h5>
+        <p class="text-muted">Keep track of your expenses and categorize them for better budgeting.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm p-4 h-100">
+        <i class="bi bi-bar-chart-line-fill text-warning display-5 mb-3"></i>
+        <h5 class="fw-bold">Analytics Dashboard</h5>
+        <p class="text-muted">Visualize your financial data through charts, summaries, and insights.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
