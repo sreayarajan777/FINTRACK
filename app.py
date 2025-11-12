@@ -19,7 +19,7 @@ app.permanent_session_lifetime = timedelta(minutes=15)
 db.init_app(app)
 migrate.init_app(app, db)
 
-from flask import render_template, session
+
 
 @app.route('/')
 def home():
