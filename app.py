@@ -4,9 +4,13 @@ from extensions import db, migrate
 from models import User, Transaction
 from datetime import datetime
 from datetime import timedelta
+import sqlite3
+
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456789@localhost:5432/finance_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///finance_db.sqlite3'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'your_secret_key'
 
@@ -24,7 +28,7 @@ def home():
 
     if 'user_id' in session:
         # Fetch user from database
-        user = User.query.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         transactions_count = Transaction.query.filter_by(user_id=user.id).count()
 
     return render_template('home.html', user=user, transactions_count=transactions_count)
@@ -112,7 +116,7 @@ def add_transaction():
             return redirect(url_for('add_transaction'))
 
         # ✅ Ensure user exists before adding transaction
-        user = User.query.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         if not user:
             flash('User not found.', 'danger')
             return redirect(url_for('login'))
@@ -219,7 +223,7 @@ def view_transactions():
         flash('Please log in first.', 'warning')
         return redirect(url_for('login'))
 
-    user = User.query.get(session['user_id'])
+    user = db.session.get(User, session['user_id'])
     if not user:
         flash('User not found.', 'danger')
         return redirect(url_for('login'))
